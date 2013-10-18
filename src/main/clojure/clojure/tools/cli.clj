@@ -56,6 +56,8 @@
               m))
           {} specs))
 
+(def ^{:dynamic true} *allow-unknown-opts?* false)
+
 (defn- apply-specs
   [specs args]
   (loop [options    (default-values-for specs)
@@ -70,8 +72,10 @@
          (recur options (into extra-args (vec (rest args))) nil)
 
          (and (opt? opt) (nil? spec))
-         (throw (Exception. (str "'" opt "' is not a valid argument")))
-         
+         (if *allow-unknown-opts?*
+           (recur options (conj extra-args opt) (rest args))
+           (throw (Exception. (str "'" opt "' is not a valid argument"))))
+
          (and (opt? opt) (spec :flag))
          (recur ((spec :assoc-fn) options (spec :name) (flag-for opt))
                 extra-args

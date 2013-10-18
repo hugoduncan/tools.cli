@@ -177,6 +177,13 @@ double-hyphen:
 
 This is useful when your extra arguments look like switches.
 
+## Unknown Options
+
+ If you `clojure.tools.cli/*allow-unknown-opts?*` to true around your
+ call to `cli`, unknown options will be passed through in the returned
+ arguments.  This can be useful when building a modular command line
+ processor.
+
 ## Banner
 
 The third item in the resulting vector is a banner useful for
